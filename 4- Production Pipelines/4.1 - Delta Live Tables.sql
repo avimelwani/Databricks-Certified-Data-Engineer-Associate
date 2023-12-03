@@ -26,8 +26,8 @@
 
 CREATE OR REFRESH STREAMING LIVE TABLE orders_raw
 COMMENT "The raw books orders, ingested from orders-raw"
-AS SELECT * FROM cloud_files("${datasets_path}/orders-json-raw", "json",
-                             map("cloudFiles.inferColumnTypes", "true"))
+AS SELECT * FROM cloud_files("${datasets_path}/orders-raw", "parquet",
+                             map("schema", "order_id STRING, order_timestamp LONG, customer_id STRING, quantity LONG"))
 
 -- COMMAND ----------
 
@@ -101,7 +101,3 @@ AS
   FROM LIVE.orders_cleaned
   WHERE country = "France"
   GROUP BY customer_id, f_name, l_name, date_trunc("DD", order_timestamp)
-
--- COMMAND ----------
-
-
